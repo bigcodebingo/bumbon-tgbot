@@ -3,9 +3,11 @@ from pathlib import Path
 
 from dotenv import load_dotenv
 
+PROJECT_ROOT = Path(__file__).resolve().parents[1]
+
 
 def get_bot_token() -> str:
-    env_file = Path(__file__).resolve().parents[2] / ".env"
+    env_file = PROJECT_ROOT / ".env"
     load_dotenv(env_file, encoding="utf-8-sig")
 
     token = os.getenv("BOT_TOKEN", "").strip()
