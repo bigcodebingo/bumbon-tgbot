@@ -17,6 +17,8 @@ async def main() -> None:
         await bot.set_my_commands([
             BotCommand(command="help", description="список команд"),
             BotCommand(command="all", description="тегнуть всех участников"),
+            BotCommand(command="mute", description="замутить"),
+            BotCommand(command="unmute", description="размутить"),
         ])
         await dispatcher.start_polling(
             bot, allowed_updates=dispatcher.resolve_used_update_types(),

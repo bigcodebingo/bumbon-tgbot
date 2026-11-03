@@ -20,7 +20,7 @@ def create_router() -> Router:
             return
         if not message.from_user or message.sender_chat:
             await message.answer(
-                "вызови /all от своего имени. "
+                "вызови /all от своего имени."
             )
             return
 
@@ -30,7 +30,7 @@ def create_router() -> Router:
         except TelegramAPIError:
             logger.exception("Could not get administrators of chat %s", chat_id)
             await message.answer(
-                "не удалось получить список участников. "
+                "не удалось получить список участников."
             )
             return
 

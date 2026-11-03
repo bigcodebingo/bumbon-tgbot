@@ -12,7 +12,7 @@ def get_bot_token() -> str:
 
     token = os.getenv("BOT_TOKEN", "").strip()
     if not token:
-        raise ValueError("Укажите BOT_TOKEN в .env или переменных окружения.")
+        raise ValueError("укажите BOT_TOKEN в .env или переменных окружения.")
 
     return token
 
