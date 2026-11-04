@@ -7,5 +7,5 @@ from src.handlers.mute import create_router as create_mute_router
 
 def create_router() -> Router:
     router = Router(name="handlers")
-    router.include_routers(create_basic_router(), create_all_router(), create_mute_router())
+    router.include_routers(create_mute_router(), create_basic_router(), create_all_router())
     return router

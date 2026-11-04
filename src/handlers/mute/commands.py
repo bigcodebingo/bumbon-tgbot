@@ -42,12 +42,9 @@ def create_router(manager: MuteManager) -> Router:
                 user_id = await manager.resolve_target(message, bot, username)
                 target = await bot.get_chat_member(message.chat.id, user_id)
                 if unmute:
-                    snapshot = manager.records.get(manager.key(message.chat.id, user_id))
                     restored = await manager.unmute(bot, message.chat.id, target)
                     if restored:
                         text = f"🔉 {target.user.full_name} размучен"
-                        if snapshot and snapshot["admin_rights"] is not None:
-                            text += " прежние права администратора восстановлены"
                     else:
                         text = "пользователь вышел из беседы или стал её владельцем; права не изменены"
                 else:

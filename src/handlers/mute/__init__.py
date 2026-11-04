@@ -3,6 +3,7 @@ from pathlib import Path
 from aiogram import Bot, Router
 
 from src.config import PROJECT_ROOT
+from src.handlers.moderation import create_router as create_moderation_router
 
 from .admins import AdminSetup, create_router as create_admin_router
 from .commands import create_router as create_mute_router
@@ -21,5 +22,7 @@ def create_router(data_dir: Path | None = None) -> Router:
 
     router.startup.register(startup)
     router.shutdown.register(manager.stop)
-    router.include_routers(create_admin_router(setup), create_mute_router(manager))
+    router.include_routers(
+        create_moderation_router(manager), create_admin_router(setup), create_mute_router(manager),
+    )
     return router
