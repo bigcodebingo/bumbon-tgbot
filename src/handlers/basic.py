@@ -4,9 +4,9 @@ from aiogram.types import Message
 
 HELP_TEXT = (
     "список команд:\n\n"
-    "/mute [@username] [минуты] — мут, без указания времени - на минуту.\n"
-    "/unmute [@username] — снять мут.\n"
-    "вместо @username поддерживается мут ответом на сообщение пользователя.\n\n"
+    "/mute [@username] [минуты] — мут, без указания времени - на минуту. также поддерживается выдача мута ответом на сообщение пользователя.\n\n"
+    "/unmute [@username] — снять мут.\n\n"
+    
     "/all — тегнуть всех участников беседы.\n"
 )
 
@@ -18,7 +18,7 @@ def create_router() -> Router:
     async def start(message: Message) -> None:
         await message.answer(
             "низае, меня зовут бумбон.\n\n"
-            "список доступных команд — /help.\n"
+            "список доступных команд — /help\n"
         )
 
     @router.message(Command("help"))

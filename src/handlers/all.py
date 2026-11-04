@@ -16,11 +16,11 @@ def create_router() -> Router:
     @router.message(Command("all"))
     async def tag_all(message: Message, bot: Bot) -> None:
         if message.chat.type not in {ChatType.GROUP, ChatType.SUPERGROUP}:
-            await message.answer("команда /all работает только в беседе.")
+            await message.answer("команда /all работает только в беседе")
             return
         if not message.from_user or message.sender_chat:
             await message.answer(
-                "вызови /all от своего имени."
+                "вызови /all от своего имени"
             )
             return
 
@@ -42,7 +42,7 @@ def create_router() -> Router:
         ]
         if not participants:
             await message.answer(
-                "нет других участников."
+                "нет других участников"
             )
             return
         mentions = [
