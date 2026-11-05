@@ -111,6 +111,18 @@ class MemeRepository:
             else:
                 db.execute("UPDATE photos SET last_sent_at=? WHERE chat_id=? AND message_id=?", (time.time(), chat_id, message_id))
 
+    async def latest_post_day(self, chat_id: int, before_day: str) -> str | None:
+        return await asyncio.to_thread(self._latest_post_day, chat_id, before_day)
+
+    def _latest_post_day(self, chat_id: int, before_day: str) -> str | None:
+        with self.connection() as db:
+            row = db.execute("""
+                SELECT day FROM daily_posts
+                WHERE chat_id=? AND day<? AND state IN ('sent', 'sending', 'uncertain')
+                ORDER BY day DESC LIMIT 1
+            """, (chat_id, before_day)).fetchone()
+            return row['day'] if row else None
+
     async def daily_plan(self, chat_id: int, day: str, scheduled_at: int) -> dict:
         return await asyncio.to_thread(self._daily_plan, chat_id, day, scheduled_at)
 

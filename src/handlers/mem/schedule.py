@@ -2,7 +2,7 @@ import asyncio
 import logging
 import random
 from contextlib import suppress
-from datetime import datetime, time, timedelta, timezone
+from datetime import date, datetime, time, timedelta, timezone
 
 from aiogram import Bot
 from aiogram.exceptions import TelegramAPIError, TelegramNetworkError, TelegramRetryAfter
@@ -11,6 +11,7 @@ from .meme_service import MemeService
 
 logger = logging.getLogger(__name__)
 MOSCOW = timezone(timedelta(hours=3), "MSK")
+POST_INTERVAL_DAYS = 3
 
 
 def quiet_hours(moment: datetime) -> bool:
@@ -63,6 +64,11 @@ class DailyScheduler:
         now = current_time()
         store, chat_id = self.service.store, self.service.chat_id
         day = now.date().isoformat()
+        last_post_day = await store.latest_post_day(chat_id, day)
+        if last_post_day is not None:
+            next_post_day = date.fromisoformat(last_post_day) + timedelta(days=POST_INTERVAL_DAYS)
+            if now.date() < next_post_day:
+                return
         plan = await store.daily_plan(chat_id, day, int(random_daily_time(now).timestamp()))
         first_tick, self.first_tick = self.first_tick, False
         if plan['state'] == 'sending':

@@ -20,7 +20,7 @@ async def main() -> None:
             BotCommand(command="all", description="тегнуть всех участников"),
             BotCommand(command="mute", description="замутить"),
             BotCommand(command="unmute", description="размутить"),
-            BotCommand(command="mem", description="случайная фотография из беседы"),
+            BotCommand(command="mem", description="случайная фотография"),
         ])
         await bot.delete_webhook(drop_pending_updates=False)
         await dispatcher.start_polling(
