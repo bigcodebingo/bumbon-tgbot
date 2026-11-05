@@ -78,7 +78,7 @@ class AdminSetup:
         self.check_no_mutes(chat_id)
         snapshot = self.snapshots.get(str(chat_id))
         if not snapshot or not snapshot["members"]:
-            raise MuteError("нет сохранений. выполните /saveadmins до ручного снятия админок")
+            raise MuteError("нет сохранений.\n\nвыполните /saveadmins до разжалования")
         await check_bot_permissions(bot, chat_id, ADMIN_PROFILE)
         restored, already_done, errors = 0, 0, []
         for user_key in list(snapshot["members"]):

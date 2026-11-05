@@ -3,11 +3,12 @@ from aiogram.filters import Command, CommandStart
 from aiogram.types import Message
 
 HELP_TEXT = (
-    "список команд:\n\n"
-    "/mute [@username] [минуты] — мут, без указания времени - на минуту. также поддерживается выдача мута ответом на сообщение пользователя.\n\n"
-    "/unmute [@username] — снять мут.\n\n"
-    
-    "/all — тегнуть всех участников беседы.\n"
+    "<b>список команд:</b>\n\n"
+    "/all — тегнуть всех участников беседы.\n\n"
+    "/mem — случайная фотография из беседы.\n\n"
+    "/mute [@username] [минуты] — мут, без указания времени - на минуту.\n"
+    "/unmute [@username] — снять мут.\n\n"    
+    "поддерживается выдача и снятие мута ответом на сообщение пользователя.\n\n"
 )
 
 
@@ -23,7 +24,7 @@ def create_router() -> Router:
 
     @router.message(Command("help"))
     async def help_command(message: Message) -> None:
-        await message.answer(HELP_TEXT)
+        await message.answer(HELP_TEXT, parse_mode="HTML")
 
     @router.message(F.text, F.text.func(lambda text: "".join(text.split()).lower() in {"heheheha", "хихихиха"}))
     async def easter_egg(message: Message) -> None:

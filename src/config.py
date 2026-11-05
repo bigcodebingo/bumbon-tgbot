@@ -4,6 +4,7 @@ from pathlib import Path
 from dotenv import load_dotenv
 
 PROJECT_ROOT = Path(__file__).resolve().parents[1]
+MEM_CHAT_ID = -1002035325840
 
 
 def get_bot_token() -> str:
@@ -12,7 +13,7 @@ def get_bot_token() -> str:
 
     token = os.getenv("BOT_TOKEN", "").strip()
     if not token:
-        raise ValueError("укажите BOT_TOKEN в .env или переменных окружения.")
+        raise ValueError("укажите BOT_TOKEN в .env или переменных окружения")
 
     return token
 
