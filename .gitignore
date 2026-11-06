@@ -12,5 +12,6 @@ dist/
 legacy/
 assets/
 tests/
+!src/casino/tests/
 ideas.txt
 data/

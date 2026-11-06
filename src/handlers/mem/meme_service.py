@@ -11,16 +11,13 @@ logger = logging.getLogger(__name__)
 
 
 class MemeService:
-    def __init__(self, store: MemeRepository, chat_id: int) -> None:
+    def __init__(self, store: MemeRepository) -> None:
         self.store = store
-        self.chat_id = chat_id
         self.lock = asyncio.Lock()
 
     async def send_random(
-        self, bot: Bot, *, can_send: Callable[[], bool] | None = None,
-        chat_id: int | None = None,
+        self, bot: Bot, *, chat_id: int, can_send: Callable[[], bool] | None = None,
     ) -> tuple[str, int | None]:
-        chat_id = self.chat_id if chat_id is None else chat_id
         async with self.lock:
             for _ in range(10):
                 photo = await self.store.choose(chat_id)

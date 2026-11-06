@@ -6,7 +6,7 @@ from aiogram.filters import Command, CommandObject
 from aiogram.types import Message
 
 from .manager import MuteManager
-from .permissions import MuteError, require_owner
+from .permissions import MuteError, check_moderation_target, require_moderator
 
 logger = logging.getLogger(__name__)
 
@@ -35,12 +35,18 @@ def create_router(manager: MuteManager) -> Router:
     @router.message(Command("mute", "unmute"))
     async def moderate(message: Message, bot: Bot, command: CommandObject) -> None:
         try:
-            await require_owner(message, bot)
             unmute = command.command == "unmute"
-            username, minutes = parse_arguments(command.args, unmute)
             async with manager.lock:
+                caller = await require_moderator(message, bot)
+                username, minutes = parse_arguments(command.args, unmute)
                 user_id = await manager.resolve_target(message, bot, username)
                 target = await bot.get_chat_member(message.chat.id, user_id)
+                record = manager.records.get(manager.key(message.chat.id, user_id))
+                # A muted administrator is currently restricted, but their
+                # saved administrator rights still make them owner-only.
+                check_moderation_target(
+                    caller, target, was_admin=record is not None and record["admin_rights"] is not None,
+                )
                 if unmute:
                     restored = await manager.unmute(bot, message.chat.id, target)
                     if restored:

@@ -14,6 +14,7 @@ ADMIN_PROFILE = dict.fromkeys(ADMIN_FIELDS, False)
 ADMIN_PROFILE.update(
     can_manage_chat=True,
     can_change_info=True,
+    can_restrict_members=True,
     can_pin_messages=True,
     can_manage_video_chats=True,
     can_post_stories=True,
@@ -26,14 +27,34 @@ class MuteError(Exception):
     """An expected refusal that can be shown to the command's author."""
 
 
-async def require_owner(message: Message, bot: Bot) -> None:
+async def _get_caller(message: Message, bot: Bot) -> ChatMember:
     if message.chat.type != ChatType.SUPERGROUP:
         raise MuteError("команды модерации работают только в супергруппе telegram")
     if not message.from_user or message.sender_chat:
         raise MuteError("вызови команду от своего имени")
-    caller = await bot.get_chat_member(message.chat.id, message.from_user.id)
+    return await bot.get_chat_member(message.chat.id, message.from_user.id)
+
+
+async def require_owner(message: Message, bot: Bot) -> None:
+    caller = await _get_caller(message, bot)
     if caller.status != ChatMemberStatus.CREATOR:
         raise MuteError("команды модерации доступны только владельцу беседы")
+
+
+async def require_moderator(message: Message, bot: Bot) -> ChatMember:
+    caller = await _get_caller(message, bot)
+    if caller.status == ChatMemberStatus.CREATOR:
+        return caller
+    if caller.status == ChatMemberStatus.ADMINISTRATOR and caller.can_restrict_members:
+        return caller
+    raise MuteError("команды мута доступны владельцу и администраторам с правом ограничивать участников")
+
+
+def check_moderation_target(caller: ChatMember, target: ChatMember, *, was_admin: bool = False) -> None:
+    if caller.status == ChatMemberStatus.CREATOR:
+        return
+    if was_admin or target.status not in {ChatMemberStatus.MEMBER, ChatMemberStatus.RESTRICTED}:
+        raise MuteError("администратор может выдавать и снимать мут только обычным участникам")
 
 
 def member_present(member: ChatMember) -> bool:

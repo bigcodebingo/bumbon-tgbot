@@ -4,7 +4,6 @@ from pathlib import Path
 from dotenv import load_dotenv
 
 PROJECT_ROOT = Path(__file__).resolve().parents[1]
-MEM_CHAT_ID = -1002035325840
 
 
 def get_bot_token() -> str:
